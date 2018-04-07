@@ -1,0 +1,5 @@
+25A20A0130F3F3F3AFBCA4F1F2
+
+F1 = Fin de section
+F2 = Fin de programme
+F3 = Pas de vaisseau

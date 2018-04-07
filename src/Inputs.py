@@ -6,7 +6,6 @@ class Input(object):
         print('Inputs, Inputs everywhere !')
         
     def relatedFunction(self, Player, root):
-        if 
           
 #     root.bind("<Up>", Player.goDown())
 #     root.bind("<Down>", Player.goUp())
