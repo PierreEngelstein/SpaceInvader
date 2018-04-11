@@ -1,4 +1,9 @@
-from Tkinter import *
+try:
+    # for Python2
+    from Tkinter import *
+except ImportError:
+    # for Python3
+    from tkinter import *
 import math
 
 from EntityAlien import EntityAlien
@@ -39,14 +44,14 @@ class Display(object):
             self.enemyPerWave = lvlConf.nbCol
             self.NbWaves = int(math.ceil(lvlConf.nbLocations/(self.enemyPerWave * 1.0)))
             self.EnemySpaceX = (self.w - 2*lvlConf.border - (self.enemyPerWave+1)*self.enemySize) / self.enemyPerWave
-            print "NbWaves = ", self.NbWaves
-            print "********"
+            print ("NbWaves = "), self.NbWaves
+            print ("********")
             index = 0
             inindex = 0
-            print "lvlConf.nbLocations : ", lvlConf.nbLocations
-            print lvlConf.alien
+            print ("lvlConf.nbLocations : "), lvlConf.nbLocations
+            print (lvlConf.alien)
             while index < lvlConf.nbLocations:
-                print "Hello, it's-a-me, Inindex ! : ", inindex
+                print ("Hello, it's-a-me, Inindex ! : ", inindex)
                 i = index % self.enemyPerWave
                 j = index / self.enemyPerWave
                 if(lvlConf.alien[inindex] != -1):
@@ -62,7 +67,7 @@ class Display(object):
 #Main game loop
     def update(self):
 #         if (self.c.winfo_width() == 1) and (self.c.winfo_height() == 1):
-        print "-------"
+        print ("-------")
         #Player updating and rendering
         self.player.next()
         self.player.render(self.c)
@@ -98,7 +103,7 @@ class Display(object):
             self.currEnemy += 1
         self.EnemyUpdatingTime += 1
         
-        print "Bullets : ", a, " Enemies : ", b #Debug message (to be removed later)
+        print ("Bullets : ", a, " Enemies : ", b) #Debug message (to be removed later)
         
         #Collision detection
         bulletID=0 #Bullet index
@@ -116,11 +121,11 @@ class Display(object):
                 ey1 = self.enemyList[enemyID].posy + self.enemyList[enemyID].height/2
                 if((bx0 < ex1 and bx1 > ex0 and by0 < ey1 and by1 > ey0)):
                     self.enemyList[enemyID].life -= self.bulletList[bulletID].damages
-                    print "damaging ", self.bulletList[bulletID].damages
+                    print ("damaging ", self.bulletList[bulletID].damages)
                     self.bulletList[bulletID].damages = 0
                     self.bulletList[bulletID].c.delete(self.bulletList[bulletID].form)
 
-                    print "collided bullet ", bulletID, " and enemy ", enemyID
+                    print ("collided bullet ", bulletID, " and enemy ", enemyID)
                 enemyID += 1
             bulletID += 1
         #Keyboard & mouse bindings

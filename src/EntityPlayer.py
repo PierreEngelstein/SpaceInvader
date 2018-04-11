@@ -1,5 +1,11 @@
-import Image
-from Tkinter import PhotoImage
+import PIL.Image
+
+try:
+    # for Python2
+    from Tkinter import *
+except ImportError:
+    # for Python3
+    from tkinter import *
 from EntityBullet import EntityBullet
 
 #The player class
@@ -15,8 +21,8 @@ class EntityPlayer(object):
         self.c = Canvas
         self.parent = parent
         self.life=1
-        image = Image.open("image.png")
-        image = image.resize((width, height), Image.ANTIALIAS)
+        image = PIL.Image.open("image.png")
+        image = image.resize((width, height))
         image.save("image.png", "png")
         self.pic = PhotoImage(file = "image_resized.png")
         self.images = Canvas.create_image(self.posx, self.posy, image = self.pic)

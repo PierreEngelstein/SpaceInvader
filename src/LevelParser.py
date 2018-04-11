@@ -22,10 +22,10 @@ class LevelParser(object):
         l = (int(self.message[3], 16)/4)
         i = ((int(self.message[3], 16)/2 - 2*l))
         e = int(self.message[3], 16) - (4*l + 2*i)
-        self.lifeSize = (l+1) * 2 #Encoded with two or four hex
-        self.imgSize =  i+1 # Encoded with one or two hex
-        self.expSize = (e+1)*2 # Encoded with two or four hex
-        print self.lifeSize, self.imgSize, self.expSize
+        self.lifeSize = int((l+1) * 2) #Encoded with two or four hex
+        self.imgSize =  int(i+1) # Encoded with one or two hex
+        self.expSize = int((e+1)*2) # Encoded with two or four hex
+        print (self.lifeSize, self.imgSize, self.expSize)
         self.alienArrayInterp = []
         index = 4
         nbLocations = 0
