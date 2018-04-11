@@ -1,7 +1,12 @@
 #Space Invader project
 #Adrien Chotard, Pierre Engelstein
 
-from Tkinter import Tk
+try:
+    # for Python2
+    from Tkinter import *
+except ImportError:
+    # for Python3
+    from tkinter import *
 from Display import Display
 from LevelParser import *
 
@@ -11,7 +16,7 @@ root.resizable(False, False)
 lvlParse = LevelParser("level.txt")
 lvlConf = lvlParse.parseFile()
 if(lvlConf == 1):
-    print "Zbrah"
+    print ("Zbrah")
 else:
     zbrah = 0
     if zbrah == 1 :
