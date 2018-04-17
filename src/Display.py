@@ -32,7 +32,7 @@ class Display(object):
         self.flagEnemy = -1
         self.EnemyUpdatingTime = 0
         self.font = tkFont.Font(family = "Consolas", size = 10, weight = "normal")
-        self.player = EntityPlayer(250, height-25, 50, 50, self.c, self)
+        self.player = EntityPlayer(250, height-50, 100, 100, self.c, self)
         self.debugString = StringVar()
         self.debugString.set("")
         self.LabelString =  Message(self.c, textvariable = self.debugString, anchor = 'nw', justify = LEFT, width = 200).place(x = 0, y  = 0, width = 135, height = 50)
