@@ -1,3 +1,12 @@
+import PIL.Image
+
+try:
+    # for Python2
+    from Tkinter import *
+except ImportError:
+    # for Python3
+    from tkinter import *
+
 class EntityAlien(object):
 
     def __init__(self, x, y, width, height, speed, canvas, parent, life = 30, EXP = 50):
@@ -12,7 +21,12 @@ class EntityAlien(object):
         self.direction = 1
         self.speed = speed
         self.life = life
-        self.form = canvas.create_rectangle(self.posx - self.width/2, self.posy - self.height/2, self.posx + self.width/2, self.posy + self.height/2, fill= 'white')
+#         self.form = canvas.create_rectangle(self.posx - self.width/2, self.posy - self.height/2, self.posx + self.width/2, self.posy + self.height/2, fill= 'white')
+        image = PIL.Image.open("SpaceInvader_Enemy1.png")
+        image = image.resize((width, height))
+        image.save("SpaceInvader_Enemy1.png", "png")
+        self.pic = PhotoImage(file = "SpaceInvader_Enemy1.png")
+        self.form = canvas.create_image(self.posx, self.posy, image = self.pic)
         self.parent.enemyList.append(self)
         
     def next(self):
