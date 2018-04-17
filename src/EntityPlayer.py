@@ -25,7 +25,7 @@ class EntityPlayer(object):
         image = PIL.Image.open("image.png")
         image = image.resize((width, height))
         image.save("image.png", "png")
-        self.pic = PhotoImage(file = "image_resized.png")
+        self.pic = PhotoImage(file = "image.png")
         self.images = Canvas.create_image(self.posx, self.posy, image = self.pic)
 
     def next(self):
