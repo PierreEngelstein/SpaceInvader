@@ -9,7 +9,7 @@ import math
 from EntityAlien import EntityAlien
 from EntityPlayer import EntityPlayer
 from LevelParser import *
-
+import tkFont
 
 #The main game class, which handles frame creation and main game loop
 class Display(object):
@@ -31,10 +31,12 @@ class Display(object):
         self.currEnemy = 0
         self.flagEnemy = -1
         self.EnemyUpdatingTime = 0
-        self.updatingSpeed = 1 #The number of frames between two enemy updates.
+        self.font = tkFont.Font(family = "Consolas", size = 10, weight = "normal")
         self.player = EntityPlayer(250, height-25, 50, 50, self.c, self)
-#         self.enemy = EntityAlien(132, 60, 50, 50, 2, self.c, self)
-#         self.enemy2 = EntityAlien(72, 60, 50, 50, 2, self.c, self)
+        self.debugString = StringVar()
+        self.debugString.set("")
+        self.LabelString =  Message(self.c, textvariable = self.debugString, anchor = 'nw', justify = LEFT, width = 200).place(x = 0, y  = 0, width = 135, height = 50)
+        self.updatingSpeed = 1 #The number of frames between two enemy updates.
         if lvlConf == "null":
             self.EnemySpaceX = (self.w - 2*self.border - (self.enemyPerWave+1)*self.enemySize) / self.enemyPerWave
             for j in range(0, self.NbWaves):
@@ -66,8 +68,6 @@ class Display(object):
 #########################################################################
 #Main game loop
     def update(self):
-#         if (self.c.winfo_width() == 1) and (self.c.winfo_height() == 1):
-        print ("-------")
         #Player updating and rendering
         self.player.next()
         self.player.render(self.c)
@@ -103,13 +103,16 @@ class Display(object):
             self.currEnemy += 1
         self.EnemyUpdatingTime += 1
         
-        print ("Bullets : ", a, " Enemies : ", b) #Debug message (to be removed later)
+        self.debugString.set("Bullets : " + str(a) + "\nEnemies : " + str(b) + "\n" + "Player score : " + str(self.player.score) + "\n")
+
+        self.root.update_idletasks()
         
         #Collision detection
         bulletID=0 #Bullet index
         while(bulletID < len(self.bulletList)):
             enemyID=0 #Enemy index
-            while(enemyID < len(self.enemyList)):
+            bulletFlag = 0
+            while(enemyID < len(self.enemyList) and bulletFlag == 0):
                 #collision boxes of the bullet and of the enemy
                 bx0 = self.bulletList[bulletID].posx - self.bulletList[bulletID].width/2
                 by0 = self.bulletList[bulletID].posy - self.bulletList[bulletID].height/2
@@ -119,16 +122,20 @@ class Display(object):
                 ey0 = self.enemyList[enemyID].posy - self.enemyList[enemyID].height/2
                 ex1 = self.enemyList[enemyID].posx + self.enemyList[enemyID].width/2
                 ey1 = self.enemyList[enemyID].posy + self.enemyList[enemyID].height/2
-                if((bx0 < ex1 and bx1 > ex0 and by0 < ey1 and by1 > ey0)):
+                if((bx0 < ex1 and bx1 > ex0 and by0 < ey1 and by1 > ey0)): #If we hit one monster
                     self.enemyList[enemyID].life -= self.bulletList[bulletID].damages
-                    print ("damaging ", self.bulletList[bulletID].damages)
+                    self.player.addScore(10)
+#                     print ("damaging ", self.bulletList[bulletID].damages)
                     self.bulletList[bulletID].damages = 0
                     self.bulletList[bulletID].c.delete(self.bulletList[bulletID].form)
+                    self.bulletList.pop(bulletID)
+                    bulletFlag = 1
 
-                    print ("collided bullet ", bulletID, " and enemy ", enemyID)
+#                     print ("collided bullet ", bulletID, " and enemy ", enemyID)
                 enemyID += 1
             bulletID += 1
         #Keyboard & mouse bindings
+        
         self.c.bind("<Button-1>", self.player.shootBullet)
         
         self.c.pack()
