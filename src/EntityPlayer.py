@@ -21,6 +21,7 @@ class EntityPlayer(object):
         self.c = Canvas
         self.parent = parent
         self.life=1
+        self.score = 0
         image = PIL.Image.open("image.png")
         image = image.resize((width, height))
         image.save("image.png", "png")
@@ -46,4 +47,6 @@ class EntityPlayer(object):
         bullet = EntityBullet(x = self.posx, y = self.posy - 20, width = 10, height = 10, speed = 10, dmg = 10, canvas = self.parent.c)
         self.parent.bulletList.append(bullet)
         return
-        
+    def addScore(self, score):
+        self.score += score
+        return
