@@ -16,7 +16,7 @@ class EntityAlien(object):
         self.parent.enemyList.append(self)
         
     def next(self):
-        print ("posy (before) : ", self.posy)
+#         print ("posy (before) : ", self.posy)
         self.dx = self.parent.enemyGoesRight*self.speed
         self.dy = 0
         if self.parent.flagEnemy >= self.parent.currEnemy:
@@ -32,7 +32,7 @@ class EntityAlien(object):
             self.parent.flagEnemy = self.parent.currEnemy
             self.parent.currEnemy = -1
         self.posy += self.dy
-        print ("posy (after) : ", self.posy)
+#         print ("posy (after) : ", self.posy)
         return
 
     def render(self, canvas):
