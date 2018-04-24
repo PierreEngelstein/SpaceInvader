@@ -22,7 +22,7 @@ class Display(object):
         # Frame declaration
         self.root = tkinterRoot
         self.c = Canvas(self.root, width=width, height=height, bg="black")  # the width and height parameters are updated only 2 frames later...
-        self.root.title("Space Invader - version 1.04.05")  # version : Version.Month.Day
+        self.root.title("Space Invader - version 1.1")  # version : Major.Minor
         self.w = width
         self.h = height
         self.border = 10
