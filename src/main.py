@@ -1,4 +1,4 @@
-#Space Invader project
+#Flaaaaag Invader project
 #Adrien Chotard, Pierre Engelstein
 
 try:
@@ -18,7 +18,7 @@ lvlConf = lvlParse.parseFile()
 if(lvlConf == 1):
     print ("Zbrah")
 else:
-    zbrah = 0
+    zbrah = 1
     if zbrah == 1 :
         display = Display(width=800, height=600, tkinterRoot=root, lvlConf = lvlConf)
     else :
