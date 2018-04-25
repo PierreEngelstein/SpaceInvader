@@ -17,15 +17,15 @@ class EntityPlayer(object):
         self.height = height
         self.dx = 0
         self.dy = 0
-        self.bulletDmg=10
+        self.bulletDmg=3
         self.c = Canvas
         self.parent = parent
         self.life=1
         self.score = 0
-        image = PIL.Image.open("image.png")
+        image = PIL.Image.open("resources/img/image.png")
         image = image.resize((width, height))
-        image.save("image.png", "png")
-        self.pic = PhotoImage(file = "image.png")
+        image.save("resources/img/imgResized/image.png", "png")
+        self.pic = PhotoImage(file = "resources/img/imgResized/image.png")
         print("Player image size : " + str(image.size))
         self.images = Canvas.create_image(self.posx, self.posy, image = self.pic)
         self.updateBBOX()
@@ -35,7 +35,7 @@ class EntityPlayer(object):
         self.setLocation((self.c.winfo_pointerx() - self.c.winfo_rootx()), (self.c.winfo_pointery() - self.c.winfo_rooty()))
         self.updateBBOX()
         self.c.delete(self.bbox)
-        self.bbox = self.c.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill="white", stipple="gray50")
+#         self.bbox = self.c.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill="white", stipple="gray50")
         return
 
     def render(self, Canvas):
