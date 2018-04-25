@@ -10,7 +10,7 @@ from EntityBullet import EntityBullet
 
 class EntityAlien(object):
 
-    def __init__(self, x, y, width, height, row, col, speed, canvas, parent, canShoot, life = 30, EXP = 50):
+    def __init__(self, x, y, width, height, row, col, speed, canvas, parent, canShoot, UID, life = 30, EXP = 50):
         self.posx = x
         self.posy = y
         self.dx = 0
@@ -26,39 +26,38 @@ class EntityAlien(object):
         self.col = col
         self.canShoot = canShoot
 #         self.form = canvas.create_rectangle(self.posx - self.width/2, self.posy - self.height/2, self.posx + self.width/2, self.posy + self.height/2, fill= 'white')
-        image = PIL.Image.open("SpaceInvader_Enemy1.png")
+        image = PIL.Image.open("resources/img/SpaceInvader_Enemy1.png")
         image = image.resize((width, height))
-        image.save("SpaceInvader_Enemy1.png", "png")
-        self.pic = PhotoImage(file = "SpaceInvader_Enemy1.png")
+        image.save("resources/img/imgResized/SpaceInvader_Enemy1.png", "png")
+        self.pic = PhotoImage(file = "resources/img/imgResized/SpaceInvader_Enemy1.png")
         self.form = canvas.create_image(self.posx, self.posy, image = self.pic)
         self.parent.enemyList.append(self)
         self.updateBBOX()
+        self.UID = UID
         
     def next(self):
 #         print ("posy (before) : ", self.posy)
-        self.dx = self.parent.enemyGoesRight*self.speed
-        self.dy = 0
-        if self.parent.flagEnemy >= self.parent.currEnemy:
-            self.dx *= 2
-        self.posx += self.dx
+        self.posx += self.parent.enemyGoesRight*self.speed
+        if self.parent.flagUID >= self.UID:
+            self.posx += self.parent.enemyGoesRight*self.speed
         
         if self.direction != self.parent.enemyGoesRight:
             self.direction = self.parent.enemyGoesRight
-            self.dy = 25
+            self.posy += 25
             
         if (self.posx >= (self.parent.w - (self.parent.border + 1) - self.width/2)) or (self.posx <= ((self.parent.border + 1) + self.width/2)):
-            self.parent.enemyGoesRight = - self.parent.enemyGoesRight
-            self.parent.flagEnemy = self.parent.currEnemy
+            self.parent.enemyGoesRight *= -1
+            self.parent.flagUID = self.UID
             self.parent.currEnemy = -1
-        self.posy += self.dy
+            
         self.updateBBOX()
 #         print ("posy (after) : ", self.posy)
         return
 
     def render(self, canvas):
-        if(self.life <= 0):
-            canvas.delete(self.form)
-        canvas.move(self.form, self.dx, self.dy)
+        canvas.delete(self.form)
+        if(self.life > 0):
+            self.form = canvas.create_image(self.posx, self.posy, image = self.pic)
         return
     
     def turnToShooter(self):
