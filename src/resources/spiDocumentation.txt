@@ -1,0 +1,32 @@
+*******************************
+*SPI File Format documentation*
+*******************************
+
+File composed of 2 sections: 
+	-> Header
+	-> Level configuration
+
+The Header (4 first characters):
+	char 1 : number of columns - 1 (between 1 and 16)
+	char 2 : monster speed
+	char 3 : level border (in pixels)
+	char 4 : concatenation of 3 parameters :
+			-> Number of characters in which life will be coded (0 => 2 characters ; 1 => 4 characters)
+			-> Number of characters in which image index will be coded (0 => 1 characters ; 1 => 2 characters)
+			-> Number of characters in which experience will be coded (0 => 2 characters ; 1 => 4 characters)
+		The result of those 3 is put in binary form (e.g. : 010 => 2 which corresponds to 
+																			2 characters for the life
+																			2 characters for the image
+																			2 characters for the experience
+		If the result of character 4 is bigger than 7, then it's incorrect (only 3 bits known)
+
+The Level Configuration:
+	Indicates the configuration of each alien from the left to the right, low to up
+	Each alien is coded in 3 parts, corresponding to the lengths found in character 4
+		-> Alien's Life
+		-> Alien's skin (image)
+		-> Alien's experience given when shot
+	The sequence F3 indicates an empty spot (a place where there is no aliens)
+	The configuration is stopped at sequence F1
+
+The file ends with the sequence F2
