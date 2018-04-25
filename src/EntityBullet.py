@@ -9,7 +9,11 @@ class EntityBullet(object):
         self.damages = dmg
         self.c = canvas
         self.isFromAlien = ifa  #-1 => from player ; 1 => from alien
-        self.form = canvas.create_oval(self.posx - self.width/2, self.posy - self.height/2, self.posx + self.width/2, self.posy + self.height/2, fill="white")
+        if ifa == 1 :
+            color = 'red'
+        else:
+            color = 'white'
+        self.form = canvas.create_oval(self.posx - self.width/2, self.posy - self.height/2, self.posx + self.width/2, self.posy + self.height/2, fill=color)
         self.life = 1
         self.updateBBOX()
     
