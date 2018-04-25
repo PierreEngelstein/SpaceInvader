@@ -14,14 +14,17 @@ except ImportError:
     # for Python3
     from tkinter import *
 
-
 # The main game class, which handles frame creation and main game loop
 class Display(object):
 
-    def __init__(self, width, height, tkinterRoot, lvlConf="null"):
+    def __init__(self, width, height, tkinterRoot, lvlConf="null", canvas = "null"):
         # Frame declaration
         self.root = tkinterRoot
-        self.c = Canvas(self.root, width=width, height=height, bg="black")  # the width and height parameters are updated only 2 frames later...
+        
+        if canvas == "null": self.c = Canvas(self.root, width=width, height=height, bg="black")  # the width and height parameters are updated only 2 frames later...
+        if canvas != "null":
+            self.c = canvas
+            self.c.config(width = width, height = height)
         self.root.title("Space Invader - version 1.1")  # version : Major.Minor
         self.w = width
         self.h = height
@@ -41,7 +44,7 @@ class Display(object):
         
         # Entities management
         self.currEnemy = 0
-        self.flagEnemy = -1
+        self.flagUID = -1
         self.EnemyUpdatingTime = 0
         self.EnemyUpdatingSpeed = 1  # The number of frames between two enemy updates.
         self.enemyGoesRight = 1
@@ -54,7 +57,7 @@ class Display(object):
         
         #Level creation
         if(lvlConf == "null"):
-            self.ConfigureLevelBase()
+            self.CreateLevelBase()
         else:
             self.CreateLevelWithConfiguration(lvlConf = lvlConf)
         
@@ -69,7 +72,7 @@ class Display(object):
             for i in range(0, self.enemyPerWave):
                 if(i == 0): canShoot = 1
                 else:canShoot = 0
-                EntityAlien(self.border + i * (self.enemySize + self.EnemySpaceX) + self.enemySize / 2, self.border + (self.NbWaves - (j + 1)) * (self.enemySize + 10) + self.enemySize / 2, self.enemySize, self.enemySize, j, i, 5, self.c, self, canShoot)
+                EntityAlien(self.border + i * (self.enemySize + self.EnemySpaceX) + self.enemySize / 2, self.border + (self.NbWaves - (j + 1)) * (self.enemySize + 10) + self.enemySize / 2, self.enemySize, self.enemySize, j, i, 5, self.c, self, canShoot, UID = i + j*self.enemyPerWave)
         return
     
     def CreateLevelWithConfiguration(self, lvlConf): #Creates the level given by the parsed configuration
@@ -78,16 +81,18 @@ class Display(object):
         self.EnemySpaceX = (self.w - 2 * lvlConf.border - (self.enemyPerWave + 1) * self.enemySize) / self.enemyPerWave
         print ("NbWaves = "), self.NbWaves
         print ("********")
-        index = 0
-        inindex = 0
+        id = 0      #Defines the UID of each alien
+        index = 0   #Defines the location of the alien
+        inindex = 0 #Goes through the values in the lvlConf array, corresponding to an unique alien
         print ("lvlConf.nbLocations : "), lvlConf.nbLocations
         print (lvlConf.alien)
         while index < lvlConf.nbLocations:
-            print ("Hello, it's-a-me, Inindex ! : ", inindex)
             i = index % self.enemyPerWave  # Index of the column
             j = index / self.enemyPerWave  # Index of the row
             if(lvlConf.alien[inindex] != -1):
-                EntityAlien(self.border + i * (self.enemySize + self.EnemySpaceX) + self.enemySize / 2, self.border + (self.NbWaves - (j + 1)) * (self.enemySize + 10) + self.enemySize / 2, self.enemySize, self.enemySize, i, j, lvlConf.speed, self.c, self, 0, lvlConf.alien[inindex], lvlConf.alien[inindex + 2])
+                print (id)
+                EntityAlien(self.border + i * (self.enemySize + self.EnemySpaceX) + self.enemySize / 2, self.border + (self.NbWaves - (j + 1)) * (self.enemySize + 10) + self.enemySize / 2, self.enemySize, self.enemySize, j, i, lvlConf.speed, self.c, self, 0, id, lvlConf.alien[inindex], lvlConf.alien[inindex + 2])
+                id += 1
                 inindex += 3
             else :
                 inindex += 1
@@ -96,14 +101,16 @@ class Display(object):
         TFList = [False] * self.enemyPerWave  # Array to know if we put a shooter to an enemy
         id = 0
         flag = 0
+        print("len : ", len(self.enemyList) -1)
         while(flag == 0):
+            print("Hey, i'm id : " + str(id))
             k = self.enemyList[id].col
             if TFList[k] == False:
                 TFList[k] = True
                 self.enemyList[id].turnToShooter()
             if TFList == [True] * self.enemyPerWave:
                 flag = 1
-            if k == len(self.enemyList) - 1:
+            if id == (len(self.enemyList) - 1):
                 flag = 1
             id += 1
         print(TFList)
@@ -146,7 +153,6 @@ class Display(object):
                 if (flag == 0):
                     id = 0
                     while(id < len(self.shooterCols)):
-                        print("id = " + str(id))
                         if(col == self.shooterCols[id]):
                             break
                         id += 1
@@ -158,7 +164,7 @@ class Display(object):
         
         if self.currEnemy >= len(self.enemyList):
             self.currEnemy = 0
-            self.flagEnemy = -1
+            self.flagUID = -1
         
         if self.EnemyUpdatingTime > self.EnemyUpdatingSpeed and len(self.enemyList):
             self.enemyList[self.currEnemy].next()
