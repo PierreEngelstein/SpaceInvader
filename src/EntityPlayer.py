@@ -56,6 +56,7 @@ class EntityPlayer(object):
         return
    
     def shootBullet(self, event):
+        self.parent.shots += 1
         bullet = EntityBullet(x = self.posx, y = self.posy - 20, width = 10, height = 10, speed = 10, dmg = 10, ifa = -1, canvas = self.parent.c)
         self.parent.bulletList.append(bullet)
         return
