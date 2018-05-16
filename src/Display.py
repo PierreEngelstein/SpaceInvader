@@ -1,11 +1,19 @@
 import math
 import random
 import sys
-import tkFont
 
+try:
+    # for Python2
+    import tkFont as font
+except ImportError:
+    # for Python3
+   import tkinter.font as font
+
+from gui_endMenuLost import gui_endMenuLost
 from EntityAlien import EntityAlien
 from EntityPlayer import EntityPlayer
 from LevelParser import *
+import time
 
 try:
     # for Python2
@@ -20,6 +28,7 @@ class Display(object):
     def __init__(self, width, height, tkinterRoot, lvlConf="null", canvas = "null"):
         # Frame declaration
         self.root = tkinterRoot
+        self.t = time
         
         if canvas == "null": self.c = Canvas(self.root, width=width, height=height, bg="black")  # the width and height parameters are updated only 2 frames later...
         if canvas != "null":
@@ -32,7 +41,7 @@ class Display(object):
         self.c.focus_set()
         
         # Debug system
-        self.font = tkFont.Font(family="Consolas", size=10, weight="normal")
+        self.font = font.Font(family="Consolas", size=10, weight="normal")
         self.debugString = StringVar()
         self.debugString.set("")
         self.LabelString = Message(self.c, textvariable=self.debugString, anchor='nw', justify=LEFT, width=200).place(x=0, y=self.h - 50, width=135, height=50)
@@ -55,16 +64,20 @@ class Display(object):
         self.shooterCols = []
         self.player = EntityPlayer(250, height - 110, 100, 100, self.c, self)
         
+        #Score & miscellaneous
+        self.numberOfKills = 0
+        self.shots = 0
+        self.goodShots = 0
+        
         #Level creation
         if(lvlConf == "null"):
             self.CreateLevelBase()
         else:
             self.CreateLevelWithConfiguration(lvlConf = lvlConf)
-        
+        self.startTime = int(round(self.t.time() * 1000))
         self.update()
         self.root.mainloop()
-    
-    
+        
     def CreateLevelBase(self): #Creates the default level
         self.shooterCols = range(0, self.enemyPerWave)
         self.EnemySpaceX = (self.w - 2 * self.border - (self.enemyPerWave + 1) * self.enemySize) / self.enemyPerWave
@@ -91,7 +104,7 @@ class Display(object):
             j = index / self.enemyPerWave  # Index of the row
             if(lvlConf.alien[inindex] != -1):
                 print (id)
-                EntityAlien(self.border + i * (self.enemySize + self.EnemySpaceX) + self.enemySize / 2, self.border + (self.NbWaves - (j + 1)) * (self.enemySize + 10) + self.enemySize / 2, self.enemySize, self.enemySize, j, i, lvlConf.speed, self.c, self, 0, id, lvlConf.alien[inindex], lvlConf.alien[inindex + 2])
+                EntityAlien(self.border + i * (self.enemySize + self.EnemySpaceX) + self.enemySize / 2, self.border + (self.NbWaves - (j + 1)) * (self.enemySize + 10) + self.enemySize / 2, self.enemySize, self.enemySize, j, i, lvlConf.speed, self.c, self, 0, id, lvlConf.alien[inindex], lvlConf.alien[inindex + 1], lvlConf.alien[inindex + 2])
                 id += 1
                 inindex += 3
             else :
@@ -139,6 +152,8 @@ class Display(object):
         b = 0
         while(b < len(self.enemyList)):
             if(self.enemyList[b].life <= 0):
+                self.numberOfKills += 1
+                self.player.addScore(self.enemyList[b].xp)
                 self.enemyList[b].c.delete(self.enemyList[b].form)
                 # Re-assignation (or not if the whole column is dead) of the shooting role
                 col = self.enemyList[b].col
@@ -184,15 +199,26 @@ class Display(object):
             if(self.bulletList[bulletID].isFromAlien == -1):  # If the bullet is shot from the player
                 while(enemyID < len(self.enemyList) and bulletFlag == 0):
                     if((self.bulletList[bulletID].x0 < self.enemyList[enemyID].x1 and self.bulletList[bulletID].x1 > self.enemyList[enemyID].x0 and self.bulletList[bulletID].y0 < self.enemyList[enemyID].y1 and self.bulletList[bulletID].y1 > self.enemyList[enemyID].y0)):  # If we hit one monster
+                        self.goodShots += 1
                         self.enemyList[enemyID].life -= self.bulletList[bulletID].damages
-                        self.player.addScore(10)
                         self.bulletList[bulletID].damages = 0
                         self.bulletList[bulletID].c.delete(self.bulletList[bulletID].form)
                         self.bulletList.pop(bulletID)
                         bulletFlag = 1
                     enemyID += 1
             else:
-                if((self.bulletList[bulletID].x0 < self.player.x1 and self.bulletList[bulletID].x1 > self.player.x0 and self.bulletList[bulletID].y0 < self.player.y1 and self.bulletList[bulletID].y1 > self.player.y0)):
+                if(len(self.enemyList) == 0 or (self.bulletList[bulletID].x0 < self.player.x1 and self.bulletList[bulletID].x1 > self.player.x0 and self.bulletList[bulletID].y0 < self.player.y1 and self.bulletList[bulletID].y1 > self.player.y0)):
+                    if(self.shots == 0):accuracy = 0
+                    else:accuracy = 1.0*self.goodShots / self.shots
+                    self.endTime = int(round(self.t.time() * 1000))
+                    time = int((self.endTime - self.startTime)/1000)
+                    
+                    score = int(max(self.player.score + self.numberOfKills*accuracy - 1*time, 0))
+                    print(accuracy)
+                    self.c.delete("all")
+                    self.c.destroy()
+                    c = Canvas(self.root, width=800, height=600, bg="black")
+                    deathMenu = gui_endMenuLost(width = 800, height = 600, canvas = c, root = self.root, kills = self.numberOfKills, shots = self.shots, goodshots = self.goodShots, timer = time, score = score)
                     sys.exit(0)  # Later on it will be a death screen...
             bulletID += 1
         
