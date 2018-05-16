@@ -2,13 +2,14 @@ from gui_button import gui_button
 import sys
 from Display import Display
 from LevelParser import *
+import PIL.Image
+
 try:
     # for Python2
-    from Tkinter import ALL
+    from Tkinter import *
 except ImportError:
     # for Python3
-    from tkinter import ALL
-
+    from tkinter import *
 
 class gui_mainMenu(object):
     
@@ -16,15 +17,31 @@ class gui_mainMenu(object):
         self.c = canvas
         self.c.focus_set()
         self.root = root
-        self.currButton = gui_button(x = width/2, y = 400, width = 150, height = 50, text = "Quit",        canvas = self.c, action = self.action_quit,    next = "null" , selected = False)
-        self.currButton = gui_button(x = width/2, y = 300, width = 150, height = 50, text = "Options",     canvas = self.c, action = self.action_options, next = self.currButton, selected = False) 
-        self.currButton = gui_button(x = width/2, y = 200, width = 150, height = 50, text = "Launch game", canvas = self.c, action = self.action_launchGame, next = self.currButton, selected = True)
+        #Logo
+        logo = PIL.Image.open("resources/img/title_concept.png")
+        logo = logo.resize((512, 512))
+        logo.save("resources/img/imgResized/title_concept.png", "png")
+        self.Logo = PhotoImage(file = "resources/img/imgResized/title_concept.png")
+        self.logoImage = self.c.create_image(width/2, 3*height/14, image = self.Logo)
+        #Buttons
+        self.currButton = gui_button(x = width/2, y = 440, width = 150, height = 50, text = "Quit",        canvas = self.c, action = self.action_quit,    next = "null" , selected = False)
+        self.currButton = gui_button(x = width/2, y = 370, width = 150, height = 50, text = "Options",     canvas = self.c, action = self.action_options, next = self.currButton, selected = False) 
+        self.currButton = gui_button(x = width/2, y = 300, width = 150, height = 50, text = "Launch game", canvas = self.c, action = self.action_launchGame, next = self.currButton, selected = True)
+        #Indicator
+        image = PIL.Image.open("resources/img/SpaceInvader_Enemy1.png")
+        image = image.resize((33, 33))
+        image.save("resources/img/imgResized/SpaceInvader_Enemy1.png", "png")
+        self.pic = PhotoImage(file = "resources/img/imgResized/SpaceInvader_Enemy1.png")
+        self.alienIndicator = self.c.create_image(self.currButton.x - 30, self.currButton.y + 12, image = self.pic)
+        
         self.update()
         self.root.mainloop()
         return
     
     def update(self):
         self.currButton.draw()
+        self.c.delete(self.alienIndicator)
+        self.alienIndicator = self.c.create_image(self.currButton.x - 30, self.currButton.y + 12, image = self.pic)
         self.c.bind("<Return>", self.currButton.action)
         self.c.bind("<Down>", self.switchDown)
         self.c.bind("<Up>", self.switchUp)
