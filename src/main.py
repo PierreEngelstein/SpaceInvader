@@ -1,6 +1,9 @@
 #Flaaaaag Invader project
 #Adrien Chotard, Pierre Engelstein
 
+import sys
+sys.dont_write_bytecode = True
+
 try:
     # for Python2
     from Tkinter import *
@@ -10,10 +13,13 @@ except ImportError:
 
 from LevelParser import *
 from gui_mainMenu import gui_mainMenu
+from gui_endMenuLost import gui_endMenuLost
 
 root = Tk()
 root.resizable(False, False)
-c = Canvas(root, width=800, height=600, bg="black")
+
+c = Canvas(root, width=800, height=600, bg='#565656')
+# gui_endMenuLost(width = 800, height = 600, canvas = c, root = root)
 mainMenu = gui_mainMenu(width = 800, height = 600, canvas = c, root = root)
 
 # lvlParse = LevelParser("resources/levels/level2.spi")
