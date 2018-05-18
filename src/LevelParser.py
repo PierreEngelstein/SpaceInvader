@@ -1,12 +1,16 @@
 #A simple level parser.
-#It takes a .txt file and interprets it to generate an array of monster fully customized.
-#The file is made of 2 parts : The header which gives general informations about how to interpret this file,
-#                              The main part which indicates how should be generated the monsters : 00 if no monster
-#                                                                                                   else, the amount of points given if we hit the monster
+import os.path, sys
+
+
 class LevelParser(object):
-
-
     def __init__(self, fileToRead):
+        if(not os.path.exists(fileToRead)):
+            print("Error : input file does not exists. Please give an existing file !")
+            sys.exit(0)
+        extension = os.path.splitext(fileToRead)[1]
+        if(extension != ".spi"):
+            print("Error : Can't read " + extension + " files. Please give a '.spi' file.")
+            sys.exit(0)
         self.f = open(fileToRead, 'r')
         self.message = self.f.read()
         print(self.message)
