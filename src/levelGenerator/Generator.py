@@ -8,9 +8,14 @@ except ImportError:
 import ttk
 import platform
 if platform.system() == "Windows":
-    import tkinter.font
+    import tkinter.font as FONT
 elif platform.system() == "Linux":
-    import tkfont
+    try:
+        # for Python2
+        import tkFont as FONT
+    except ImportError:
+        # for Python3
+       import tkinter.font as FONT
     
 from GenCell import GenCell
 
@@ -18,9 +23,9 @@ from GenCell import GenCell
 class Generator:
     def __init__(self, master, width, height):
         if platform.system() == "Windows":
-            font = tkinter.font.Font(family = "Consolas", size = 10, weight = "normal") 
+            font = FONT.Font(family = "Consolas", size = 10, weight = "normal") 
         elif platform.system() == "Linux":
-            font = tkfont.Font(family = "Consolas", size = 10, weight = "normal")
+            font = FONT.Font(family = "Consolas", size = 10, weight = "normal")
         self.c = Canvas(master, width=width, height=height, bg = "gray") #the width and height parameters are updated only 2 frames later...
         self.c.focus_set()
         self.width = width
