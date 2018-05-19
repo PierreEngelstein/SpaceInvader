@@ -1,12 +1,14 @@
 import PIL.Image
 
+from EntityBullet import EntityBullet
+
+
 try:
     # for Python2
     from Tkinter import *
 except ImportError:
     # for Python3
     from tkinter import *
-from EntityBullet import EntityBullet
 
 class EntityAlien(object):
 

@@ -5,8 +5,12 @@ try:
 except ImportError:
     # for Python3
     from tkinter import *
-import ttk
 import platform
+import ttk
+
+from GenCell import GenCell
+
+
 if platform.system() == "Windows":
     import tkinter.font as FONT
 elif platform.system() == "Linux":
@@ -17,7 +21,6 @@ elif platform.system() == "Linux":
         # for Python3
        import tkinter.font as FONT
     
-from GenCell import GenCell
 
   
 class Generator:
