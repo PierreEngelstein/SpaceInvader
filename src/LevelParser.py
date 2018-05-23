@@ -58,12 +58,13 @@ class LevelParser(object):
                     self.alienArrayInterp.append(value)
                 
                 index += inindex
-        lvlConf = LevelConfig(nbCol = self.nbCol, speed = self.speed, border = self.border, alienList = self.alienArrayInterp, nbLocations = nbLocations)
+        lvlConf = LevelConfig(levelName = self.ftr, nbCol = self.nbCol, speed = self.speed, border = self.border, alienList = self.alienArrayInterp, nbLocations = nbLocations)
         return lvlConf
             
 class LevelConfig(object):
 
-    def __init__(self, nbCol, speed, border, alienList, nbLocations):
+    def __init__(self, levelName, nbCol, speed, border, alienList, nbLocations):
+        self.levelName = levelName
         self.nbCol = nbCol
         self.speed = speed
         self.border = border
