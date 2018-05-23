@@ -18,9 +18,10 @@ from gui_endMenuLost import gui_endMenuLost
 root = Tk()
 root.resizable(False, False)
 
-c = Canvas(root, width=800, height=600, bg='#565656')
+c = Canvas(root, width=1200, height=700, bg='#565656')
 # gui_endMenuLost(width = 800, height = 600, canvas = c, root = root)
-mainMenu = gui_mainMenu(width = 800, height = 600, canvas = c, root = root)
+
+mainMenu = gui_mainMenu(width = 1200, height = 700, canvas = c, root = root)
 
 # lvlParse = LevelParser("resources/levels/level2.spi")
 # lvlConf = lvlParse.parseFile()
