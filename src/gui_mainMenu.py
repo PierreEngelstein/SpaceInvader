@@ -37,8 +37,8 @@ class gui_mainMenu(object):
         self.Logo = PhotoImage(file = "resources/img/imgResized/title_concept.png")
         self.logoImage = self.c.create_image(width/2, 3*height/14, image = self.Logo)
         #Buttons
-        self.currButton = gui_button(x = width/2, y = 440, width = 150, height = 50, text = "Quit",        canvas = self.c, action = self.action_quit,    next = "null" , selected = False)
-        self.currButton = gui_button(x = width/2, y = 370, width = 150, height = 50, text = "Options",     canvas = self.c, action = self.action_options, next = self.currButton, selected = False) 
+        self.currButton = gui_button(x = width/2, y = 440, width = 150, height = 50, text = "Quit",        canvas = self.c, action = self.action_quit,       next = "null" , selected = False)
+        self.currButton = gui_button(x = width/2, y = 370, width = 150, height = 50, text = "Options",     canvas = self.c, action = self.action_options,    next = self.currButton, selected = False) 
         self.currButton = gui_button(x = width/2, y = 300, width = 150, height = 50, text = "Launch game", canvas = self.c, action = self.action_launchGame, next = self.currButton, selected = True)
         #Indicator
         image = PIL.Image.open("resources/img/SpaceInvader_Enemy1.png")
@@ -46,7 +46,7 @@ class gui_mainMenu(object):
         image.save("resources/img/imgResized/SpaceInvader_Enemy1.png", "png")
         self.pic = PhotoImage(file = "resources/img/imgResized/SpaceInvader_Enemy1.png")
         self.alienIndicator = self.c.create_image(self.currButton.x - 30, self.currButton.y + 12, image = self.pic)
-        
+        self.audioSystem = audio()
         self.update()
         self.root.mainloop()
         return
@@ -65,9 +65,9 @@ class gui_mainMenu(object):
     def action_quit(self, event):
         sys.exit(0)
     def action_options(self, event):
-        print("JE NE SUIS PAS OPTIONNEL !!!")
+        print("Options...")
     def action_launchGame(self, event):
-        print("THIS IS A FOCKING GAME")
+        print("Launching the game...")
         self.c.destroy()
         lvlParse = LevelParser("resources/levels/level2.spi")
         lvlConf = lvlParse.parseFile()
@@ -76,8 +76,10 @@ class gui_mainMenu(object):
         else:
             zbrah = 1
             if zbrah == 1 :
+                print("Launching level " + lvlParse.ftr)
                 display = Display(width=1200, height=700, tkinterRoot=self.root, lvlConf = lvlConf)
             else :
+                print("Launching basic level")
                 display = Display(width=1200, height=700, tkinterRoot=self.root)
         
     def switchDown(self, event):
@@ -85,6 +87,7 @@ class gui_mainMenu(object):
             return
         self.currButton.selected = False
         self.currButton.draw()
+#         self.audioSystem.playSound(self.audioSystem.clickSound)
         self.currButton = self.currButton.next
         self.currButton.selected = True
         
