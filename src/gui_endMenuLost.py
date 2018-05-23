@@ -1,13 +1,6 @@
-<<<<<<< Updated upstream
 import sys
 
 import PIL.Image
-
-=======
-import PIL.Image
-import sys
-
->>>>>>> Stashed changes
 from LevelParser import *
 from gui_button import gui_button
 

@@ -1,13 +1,3 @@
-<<<<<<< Updated upstream
-import sys
-
-import PIL.Image
-
-from Display import Display
-from LevelParser import *
-from gui_button import gui_button
-
-=======
 import PIL.Image
 import sys
 
@@ -15,7 +5,6 @@ from Display import Display
 from LevelParser import *
 from audio import audio
 from gui_button import gui_button
->>>>>>> Stashed changes
 
 try:
     # for Python2
