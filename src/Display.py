@@ -10,6 +10,7 @@ except ImportError:
    import tkinter.font as font
 
 from gui_endMenuLost import gui_endMenuLost
+from gui_pauseMenu import gui_pauseMenu
 from EntityAlien import EntityAlien
 from EntityPlayer import EntityPlayer
 from LevelParser import *
@@ -29,7 +30,6 @@ class Display(object):
         # Frame declaration
         self.root = tkinterRoot
         self.t = time
-        
         if canvas == "null": self.c = Canvas(self.root, width=width, height=height, bg="black")  # the width and height parameters are updated only 2 frames later...
         if canvas != "null":
             self.c = canvas
@@ -68,6 +68,7 @@ class Display(object):
         self.numberOfKills = 0
         self.shots = 0
         self.goodShots = 0
+        self.paused = False
         
         #Level creation
         if(lvlConf == "null"):
@@ -103,7 +104,7 @@ class Display(object):
             i = index % self.enemyPerWave  # Index of the column
             j = index / self.enemyPerWave  # Index of the row
             if(lvlConf.alien[inindex] != -1):
-                print (id)
+#                 print (id)
                 EntityAlien(self.border + i * (self.enemySize + self.EnemySpaceX) + self.enemySize / 2, self.border + (self.NbWaves - (j + 1)) * (self.enemySize + 10) + self.enemySize / 2, self.enemySize, self.enemySize, j, i, lvlConf.speed, self.c, self, 0, id, lvlConf.alien[inindex], lvlConf.alien[inindex + 1], lvlConf.alien[inindex + 2])
                 id += 1
                 inindex += 3
@@ -114,9 +115,9 @@ class Display(object):
         TFList = [False] * self.enemyPerWave  # Array to know if we put a shooter to an enemy
         id = 0
         flag = 0
-        print("len : ", len(self.enemyList) -1)
+#         print("len : ", len(self.enemyList) -1)
         while(flag == 0):
-            print("Hey, i'm id : " + str(id))
+#             print("Hey, i'm id : " + str(id))
             k = self.enemyList[id].col
             if TFList[k] == False:
                 TFList[k] = True
@@ -240,16 +241,26 @@ class Display(object):
         
         self.EnemyShootingTime += 1
         return
-
+    
+    def Paused(self):
+#TODO: create the pause menu
+        a=1       
+        
     def KeyBinding(self):
         self.c.bind("<Button-1>", self.player.shootBullet)
+        self.c.bind("<p>", self.pause)
         return
     
     def update(self): # Main game loop
-        self.EntityRenderAndUpdate()
-        self.DetectCollisions()
-        self.EnemyShooting()
-        self.KeyBinding()
-        
+        if not self.paused:
+            self.EntityRenderAndUpdate()
+            self.DetectCollisions()
+            self.EnemyShooting()
+            self.KeyBinding()
+        else:
+            self.Paused()
         self.c.pack()
         self.root.after(10, self.update)
+    
+    def pause(self, event):
+        self.paused= not self.paused
