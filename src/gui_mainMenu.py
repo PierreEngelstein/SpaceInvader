@@ -1,8 +1,11 @@
-from gui_button import gui_button
 import sys
+
+import PIL.Image
+
 from Display import Display
 from LevelParser import *
-import PIL.Image
+from gui_button import gui_button
+
 
 try:
     # for Python2

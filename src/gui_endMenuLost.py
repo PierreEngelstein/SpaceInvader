@@ -1,7 +1,10 @@
-from gui_button import gui_button
 import sys
-from LevelParser import *
+
 import PIL.Image
+
+from LevelParser import *
+from gui_button import gui_button
+
 try:
     # for Python2
     from Tkinter import *
