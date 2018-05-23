@@ -2,7 +2,7 @@ import PIL.Image
 import sys
 
 from Display import Display
-from LevelParser import *
+from GameParser import *
 from audio import audio
 from gui_button import gui_button
 
@@ -41,14 +41,15 @@ class gui_mainMenu(object):
         return
     
     def update(self):
-        self.currButton.draw()
-        self.c.delete(self.alienIndicator)
-        self.alienIndicator = self.c.create_image(self.currButton.x - 30, self.currButton.y + 12, image = self.pic)
-        self.c.bind("<Return>", self.currButton.action)
-        self.c.bind("<Down>", self.switchDown)
-        self.c.bind("<Up>", self.switchUp)
-        self.c.pack()
-        self.root.after(10, self.update)
+        if(self.c.winfo_exists() != 0):
+            self.currButton.draw()
+            self.c.delete(self.alienIndicator)
+            self.alienIndicator = self.c.create_image(self.currButton.x - 30, self.currButton.y + 12, image = self.pic)
+            self.c.bind("<Return>", self.currButton.action)
+            self.c.bind("<Down>", self.switchDown)
+            self.c.bind("<Up>", self.switchUp)
+            self.c.pack()
+            self.root.after(10, self.update)
         return
 
     def action_quit(self, event):
@@ -58,18 +59,15 @@ class gui_mainMenu(object):
     def action_launchGame(self, event):
         print("Launching the game...")
         self.c.destroy()
-        lvlParse = LevelParser("resources/levels/level2.spi")
-        lvlConf = lvlParse.parseFile()
-        if(lvlConf == 1):
-            print ("Zbrah")
-        else:
-            zbrah = 1
-            if zbrah == 1 :
-                print("Launching level " + lvlParse.ftr)
-                display = Display(width=1200, height=700, tkinterRoot=self.root, lvlConf = lvlConf)
-            else :
-                print("Launching basic level")
-                display = Display(width=1200, height=700, tkinterRoot=self.root)
+        gameParse = GameParser("resources/levels/game1.game")
+        gameParse.parseFile()
+        zbrah = 1
+        if zbrah == 1 :
+            print("Launching level " + gameParse.levelListConf[gameParse.currentLevel].levelName)
+            display = Display(width=1200, height=700, tkinterRoot=self.root, gameConf = gameParse)
+        else :
+            print("Launching basic level")
+            display = Display(width=800, height=600, tkinterRoot=self.root)
         
     def switchDown(self, event):
         if (self.currButton.next == 'null'):

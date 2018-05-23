@@ -11,6 +11,7 @@ except ImportError:
 
 from gui_endMenuLost import gui_endMenuLost
 from gui_pauseMenu import gui_pauseMenu
+from gui_HUD import gui_HUD
 from EntityAlien import EntityAlien
 from EntityPlayer import EntityPlayer
 from LevelParser import *
@@ -26,7 +27,7 @@ except ImportError:
 # The main game class, which handles frame creation and main game loop
 class Display(object):
 
-    def __init__(self, width, height, tkinterRoot, lvlConf="null", canvas = "null"):
+    def __init__(self, width, height, tkinterRoot, gameConf, canvas = "null", startTime = 0, precBulleTouched = 0, precBulletTotal = 0, nbKills = 0):
         # Frame declaration
         self.root = tkinterRoot
         self.t = time
@@ -39,12 +40,8 @@ class Display(object):
         self.h = height
         self.border = 10
         self.c.focus_set()
-        
-        # Debug system
-        self.font = font.Font(family="Consolas", size=10, weight="normal")
-        self.debugString = StringVar()
-        self.debugString.set("")
-        self.LabelString = Message(self.c, textvariable=self.debugString, anchor='nw', justify=LEFT, width=200).place(x=0, y=self.h - 50, width=135, height=50)
+        self.hud = gui_HUD(self)
+        self.levelName = "EMPTY"
         
         # Entities default declaration
         self.enemySize = 50
@@ -65,16 +62,19 @@ class Display(object):
         self.player = EntityPlayer(250, height - 110, 100, 100, self.c, self)
         
         #Score & miscellaneous
-        self.numberOfKills = 0
-        self.shots = 0
-        self.goodShots = 0
+        self.numberOfKills = nbKills
+        self.shots = precBulletTotal
+        self.goodShots = precBulleTouched
         self.paused = False
+        self.debug = False
         
         #Level creation
-        if(lvlConf == "null"):
+        self.gameConf = gameConf
+        if(gameConf == "null"):
             self.CreateLevelBase()
         else:
-            self.CreateLevelWithConfiguration(lvlConf = lvlConf)
+            self.CreateLevelWithConfiguration(lvlConf = gameConf.levelListConf[gameConf.currentLevel])
+            self.levelName = gameConf.levelListConf[gameConf.currentLevel].levelName
         self.startTime = int(round(self.t.time() * 1000))
         self.update()
         self.root.mainloop()
@@ -187,8 +187,9 @@ class Display(object):
             self.enemyList[self.currEnemy].render(self.c)
             self.EnemyUpdatingTime = 0
             self.currEnemy += 1
+        if(len(self.enemyList) == 0):
+            self.endGame()
         self.EnemyUpdatingTime += 1
-        self.debugString.set("Bullets : " + str(a) + "\nEnemies : " + str(b) + "\n" + "Player score : " + str(self.player.score) + "\n")
         self.root.update_idletasks()
         return
     
@@ -208,19 +209,8 @@ class Display(object):
                         bulletFlag = 1
                     enemyID += 1
             else:
-                if(len(self.enemyList) == 0 or (self.bulletList[bulletID].x0 < self.player.x1 and self.bulletList[bulletID].x1 > self.player.x0 and self.bulletList[bulletID].y0 < self.player.y1 and self.bulletList[bulletID].y1 > self.player.y0)):
-                    if(self.shots == 0):accuracy = 0
-                    else:accuracy = 1.0*self.goodShots / self.shots
-                    self.endTime = int(round(self.t.time() * 1000))
-                    time = int((self.endTime - self.startTime)/1000)
-                    
-                    score = int(max(self.player.score + self.numberOfKills*accuracy - 1*time, 0))
-                    print(accuracy)
-                    self.c.delete("all")
-                    self.c.destroy()
-                    c = Canvas(self.root, width=800, height=600, bg="black")
-                    deathMenu = gui_endMenuLost(width = 800, height = 600, canvas = c, root = self.root, kills = self.numberOfKills, shots = self.shots, goodshots = self.goodShots, timer = time, score = score)
-                    sys.exit(0)  # Later on it will be a death screen...
+                if((len(self.enemyList) == 0) or (self.bulletList[bulletID].x0 < self.player.x1 and self.bulletList[bulletID].x1 > self.player.x0 and self.bulletList[bulletID].y0 < self.player.y1 and self.bulletList[bulletID].y1 > self.player.y0)):
+                    self.endGame()
             bulletID += 1
         
         return
@@ -246,17 +236,36 @@ class Display(object):
 #TODO: create the pause menu
         a=1       
         
+    def endGame(self):
+        if(self.shots == 0):accuracy = 0
+        else:accuracy = 1.0*self.goodShots / self.shots
+        self.endTime = int(round(self.t.time() * 1000))
+        time = int((self.endTime - self.startTime)/1000)
+                    
+        score = int(max(self.player.score + self.numberOfKills*accuracy - 1*time, 0))
+        self.c.delete("all")
+        self.c.destroy()
+        c = Canvas(self.root, width=800, height=600, bg="black")
+        if(self.gameConf != "null" and self.gameConf.currentLevel != (len(self.gameConf.levelListConf) - 1)):
+            self.gameConf.currentLevel += 1
+            display = Display(width=1200, height=700, tkinterRoot=self.root, gameConf = self.gameConf, startTime = self.startTime, precBulleTouched = self.goodShots, precBulletTotal = self.shots, nbKills = self.numberOfKills)
+        else:
+            deathMenu = gui_endMenuLost(width = 800, height = 600, canvas = c, root = self.root, kills = self.numberOfKills, shots = self.shots, goodshots = self.goodShots, timer = time, score = score)
+    
     def KeyBinding(self):
         self.c.bind("<Button-1>", self.player.shootBullet)
         self.c.bind("<p>", self.pause)
+        self.c.bind("<d>", self.hud.setDebugMode)
         return
     
     def update(self): # Main game loop
-        if not self.paused:
+        if not self.paused or (self.c.winfo_exists() != 0):
             self.EntityRenderAndUpdate()
-            self.DetectCollisions()
             self.EnemyShooting()
+            self.DetectCollisions()
+            self
             self.KeyBinding()
+            self.hud.update();
         else:
             self.Paused()
         self.c.pack()
