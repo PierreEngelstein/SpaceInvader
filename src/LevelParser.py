@@ -4,6 +4,7 @@ import os.path, sys
 
 class LevelParser(object):
     def __init__(self, fileToRead):
+        self.ftr = fileToRead
         if(not os.path.exists(fileToRead)):
             print("Error : input file does not exists. Please give an existing file !")
             sys.exit(0)
