@@ -37,12 +37,13 @@ class gui_endMenuLost(object):
         return
     
     def update(self):
-        self.currButton.draw()
-        self.c.bind("<Return>", self.currButton.action)
-        self.c.bind("<Down>", self.switchDown)
-        self.c.bind("<Up>", self.switchUp)
-        self.c.pack()
-        self.root.after(10, self.update)
+        if(self.c.winfo_exists() == 1):
+            self.currButton.draw()
+            self.c.bind("<Return>", self.currButton.action)
+            self.c.bind("<Down>", self.switchDown)
+            self.c.bind("<Up>", self.switchUp)
+            self.c.pack()
+            self.root.after(10, self.update)
         return
 
     def switchDown(self, event):
@@ -69,7 +70,7 @@ class gui_endMenuLost(object):
     def action_mainMenu(self, event):
         print("AH")
         self.c.destroy()
-        self.c = Canvas(self.root, width=1200, height=700, bg='#565656')
+        self.c = Canvas(self.root, width=800, height=600, bg='#565656')
         from gui_mainMenu import gui_mainMenu
-        mainMenu = gui_mainMenu(width = 1200, height = 700, canvas = self.c, root = self.root)
+        mainMenu = gui_mainMenu(width = 800, height = 600, canvas = self.c, root = self.root)
     
