@@ -1,5 +1,6 @@
 import PIL.Image
 import sys
+import time
 
 from Display import Display
 from GameParser import *
@@ -19,11 +20,12 @@ class gui_mainMenu(object):
         self.c = canvas
         self.c.focus_set()
         self.root = root
+        self.t = time
         #Logo
-        logo = PIL.Image.open("resources/img/title_concept.png")
+        logo = PIL.Image.open("resources/img/Title_Start.png")
         logo = logo.resize((512, 512))
-        logo.save("resources/img/imgResized/title_concept.png", "png")
-        self.Logo = PhotoImage(file = "resources/img/imgResized/title_concept.png")
+        logo.save("resources/img/imgResized/Title_Start.png", "png")
+        self.Logo = PhotoImage(file = "resources/img/imgResized/Title_Start.png")
         self.logoImage = self.c.create_image(width/2, 3*height/14, image = self.Logo)
         #Buttons
         self.currButton = gui_button(x = width/2, y = 440, width = 150, height = 50, text = "Quit",        canvas = self.c, action = self.action_quit,       next = "null" , selected = False)
@@ -64,10 +66,10 @@ class gui_mainMenu(object):
         zbrah = 1
         if zbrah == 1 :
             print("Launching level " + gameParse.levelListConf[gameParse.currentLevel].levelName)
-            display = Display(width=1200, height=700, tkinterRoot=self.root, gameConf = gameParse)
+            display = Display(width=1200, height=700, tkinterRoot=self.root, gameConf = gameParse, startTime = int(round(self.t.time() * 1000)))
         else :
             print("Launching basic level")
-            display = Display(width=800, height=600, tkinterRoot=self.root)
+            display = Display(width=800, height=600, tkinterRoot=self.root, startTime = int(round(self.t.time() * 1000)))
         
     def switchDown(self, event):
         if (self.currButton.next == 'null'):
