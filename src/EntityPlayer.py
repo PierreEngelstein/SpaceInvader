@@ -2,7 +2,6 @@ import PIL.Image
 
 from EntityBullet import EntityBullet
 
-
 try:
     # for Python2
     from Tkinter import *
@@ -12,7 +11,7 @@ except ImportError:
 
 #The player class
 class EntityPlayer(object):
-    def __init__(self, x, y, width, height, Canvas, parent):
+    def __init__(self, x, y, width, height, Canvas, parent, score = 0):
         self.posx = x
         self.posy = y
         self.width = width
@@ -23,7 +22,7 @@ class EntityPlayer(object):
         self.c = Canvas
         self.parent = parent
         self.life=1
-        self.score = 0
+        self.score = score
         image = PIL.Image.open("resources/img/image.png")
         image = image.resize((width, height))
         image.save("resources/img/imgResized/image.png", "png")
@@ -37,7 +36,6 @@ class EntityPlayer(object):
         self.setLocation((self.c.winfo_pointerx() - self.c.winfo_rootx()), (self.c.winfo_pointery() - self.c.winfo_rooty()))
         self.updateBBOX()
         self.c.delete(self.bbox)
-#         self.bbox = self.c.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill="white", stipple="gray50")
         return
 
     def render(self, Canvas):
