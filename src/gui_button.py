@@ -1,3 +1,8 @@
+#
+# This file is subject to the terms and conditions defined in
+# file 'LICENSE.txt', which is part of this source code package.
+#
+
 try:
     # for Python2
     from Tkinter import *
@@ -24,7 +29,7 @@ class gui_button(object):
     
     def draw(self):
         self.c.delete(self.text)
-        if(self.selected == True):
+        if(self.selected == True): #We can't just do if(self.selected) , well, because Python...
             self.text = self.c.create_text(self.x, self.y, fill = "blue", anchor = "nw", text = self.txt, font=("Courier new", self.textSize))
         if(self.selected == False):
             self.text = self.c.create_text(self.x, self.y, fill = "white", anchor = "nw", text = self.txt, font=("Courier new", self.textSize))

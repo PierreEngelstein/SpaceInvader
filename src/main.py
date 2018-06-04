@@ -1,5 +1,7 @@
-#Space Invader project
-#Adrien Chotard, Pierre Engelstein
+#
+# This file is subject to the terms and conditions defined in
+# file 'LICENSE.txt', which is part of this source code package.
+#
 
 import sys
 # sys.dont_write_bytecode = True

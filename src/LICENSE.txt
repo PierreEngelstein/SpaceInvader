@@ -1,0 +1,14 @@
+Copyright (C) 2018 Pierre Engelstein, Adrien Chotard
+
+You may not modify, redistribute, sell, or use any part of this code
+without the express permission of Pierre Engelstein AND Adrien Chotard.
+
+You may not modify, redistribute, sell, or use any part of the source code
+of the Level Generator without the express permission of Adrien Chotard.
+
+You may not modify, redistribute, sell, or use any part of any image
+without the express permission of Pierre Engelstein.
+
+contact:
+pier.engelstein@outlook.com
+adrien.chotard@hotmail.com

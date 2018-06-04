@@ -1,3 +1,8 @@
+#
+# This file is subject to the terms and conditions defined in
+# file 'LICENSE.txt', which is part of this source code package.
+#
+
 class EntityBullet(object):
     
     def __init__(self, x, y, width, height, speed, dmg, ifa, canvas):
