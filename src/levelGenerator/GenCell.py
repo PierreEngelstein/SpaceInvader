@@ -1,17 +1,22 @@
 class GenCell:
-    def __init__(self, x, y, size, rank, canvas):
-        
-        self.posx0 = x
-        self.posy0 = y
-        self.width = size
-        self.height = size
+    def __init__(self, rank, canvas):
         self.rank = rank
         self.isSelected = False
         self.isAlive = False
         self.c = canvas
+        self.HP = 0
+        self.XP = 0
+        self.idIMG = rank%2
 #        print(str(int(str(rankX*10%255 *256 + rankY*10%255 + 1), 16)))
        
-    def update(self):
+    def setxy(self, x, y, size):
+        self.posx0 = x
+        self.posy0 = y
+        self.width = size
+        self.height = size
+        self.render()
+      
+    def setSelection(self):
         self.isSelected = not(self.isSelected)
         self.render()
             
