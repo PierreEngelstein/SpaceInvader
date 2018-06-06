@@ -160,7 +160,7 @@ class Generator:
         self.c.bind("<Right>", self.switchRight)
         self.c.bind("<Return>", self.LiveOrDie)
         self.c.bind("<F5>", self.loadImgArray)
-        self.c.bind("<*>", exit)
+        self.c.bind("<Q>", exit)
         self.c.pack()
         self.root.after(10, self.update)
         return
