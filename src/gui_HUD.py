@@ -1,3 +1,8 @@
+#
+# This file is subject to the terms and conditions defined in
+# file 'LICENSE.txt', which is part of this source code package.
+#
+
 import sys
 
 import PIL.Image
@@ -32,7 +37,7 @@ class gui_HUD(object):
         self.debugFont = FONT.Font(family = "Courier new", size = 12, weight = "normal")
         
         self.time_text  = self.c.create_text(50, self.display.h - 50, fill = "white", anchor = "nw", text = "Current time played ", font=self.font)
-        self.score_text = self.c.create_text(self.display.w - 200, self.display.h - 50, fill = "white", anchor = "nw", text = "Player experience : ", font=self.font)
+        self.score_text = self.c.create_text(self.display.w - 400, self.display.h - 50, fill = "white", anchor = "nw", text = "Player experience : ", font=self.font)
         self.debug_text = self.c.create_text(10, 10, fill = "white", anchor = "nw", text = "", font=self.debugFont)
         self.debugBackground = "null"
         self.debug = False

@@ -1,3 +1,8 @@
+#
+# This file is subject to the terms and conditions defined in
+# file 'LICENSE.txt', which is part of this source code package.
+#
+
 import sys
 
 import PIL.Image
@@ -13,7 +18,7 @@ except ImportError:
 
 class gui_endMenuLost(object):
     
-    def __init__(self, width, height, canvas, root, kills = 1, shots = 256, goodshots = 254, timer = 36415, score = 0):
+    def __init__(self, width, height, canvas, root, kills = 1, shots = 256, goodshots = 254, timer = 36415, score = 0, isDead = True):
         self.c = canvas
         self.c.focus_set()
         self.root = root
@@ -24,7 +29,20 @@ class gui_endMenuLost(object):
         hours = timer/3600
         minutes = (timer%3600)/60
         seconds = timer%60
-        self.c.create_text(width/5, 100, fill = "white", anchor = "nw", text = "Game Over !", font=("Courier new", 40))
+        if(isDead == False):
+            logo = PIL.Image.open("resources/img/Title_YouWin.png")
+            logo = logo.resize((49*8, 9*8))
+            logo.save("resources/img/imgResized/Title_YouWin.png", "png")
+            self.Logo = PhotoImage(file = "resources/img/imgResized/Title_YouWin.png")
+            self.logoImage = self.c.create_image(width/2, 2*height/14, image = self.Logo)
+        else:
+            logo = PIL.Image.open("resources/img/Title_GameOver.png")
+            logo = logo.resize((57*8, 9*8))
+            logo.save("resources/img/imgResized/Title_GameOver.png", "png")
+            self.Logo = PhotoImage(file = "resources/img/imgResized/Title_GameOver.png")
+            self.logoImage = self.c.create_image(width/2, 2*height/14, image = self.Logo)
+
+#             self.c.create_text(width/5, 100, fill = "white", anchor = "nw", text = "Game Over !", font=("Courier new", 40))
         self.c.create_text(width/5, 200, fill = "white", anchor = "nw", text = "Nb of kills : " + str(kills), font=("Courier new", 15))
         self.c.create_text(width/5, 250, fill = "white", anchor = "nw", text = "Nb of shots (hit / total): " + str(goodshots) + " / " + str(shots), font=("Courier new", 15))
         self.c.create_text(width/5, 300, fill = "white", anchor = "nw", text = "Accuracy : " + str(round(accuracy * 100, 2)) + " %", font=("Courier new", 15))
@@ -70,7 +88,7 @@ class gui_endMenuLost(object):
     def action_mainMenu(self, event):
         print("AH")
         self.c.destroy()
-        self.c = Canvas(self.root, width=800, height=600, bg='#565656')
+        self.c = Canvas(self.root, width=1200, height=700, bg='#565656')
         from gui_mainMenu import gui_mainMenu
-        mainMenu = gui_mainMenu(width = 800, height = 600, canvas = self.c, root = self.root)
+        mainMenu = gui_mainMenu(width = 1200, height = 700, canvas = self.c, root = self.root)
     

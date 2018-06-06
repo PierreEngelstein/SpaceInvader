@@ -1,6 +1,12 @@
+#
+# This file is subject to the terms and conditions defined in
+# file 'LICENSE.txt', which is part of this source code package.
+#
+
 import math
 import random
 import sys
+import time
 
 try:
     # for Python2
@@ -15,7 +21,7 @@ from gui_HUD import gui_HUD
 from EntityAlien import EntityAlien
 from EntityPlayer import EntityPlayer
 from LevelParser import *
-import time
+
 
 try:
     # for Python2
@@ -27,7 +33,7 @@ except ImportError:
 # The main game class, which handles frame creation and main game loop
 class Display(object):
 
-    def __init__(self, width, height, tkinterRoot, gameConf, canvas = "null", startTime = 0, precBulleTouched = 0, precBulletTotal = 0, nbKills = 0):
+    def __init__(self, width, height, tkinterRoot, gameConf, canvas = "null", startTime = 0, precBulleTouched = 0, precBulletTotal = 0, nbKills = 0, score = 0):
         # Frame declaration
         self.root = tkinterRoot
         self.t = time
@@ -59,7 +65,7 @@ class Display(object):
         self.bulletList = []  # The list of all the bullets to be rendered
         self.enemyList = []  # The list of all the enemies to be rendered
         self.shooterCols = []
-        self.player = EntityPlayer(250, height - 110, 100, 100, self.c, self)
+        self.player = EntityPlayer(250, height - 110, 100, 100, self.c, self, score)
         
         #Score & miscellaneous
         self.numberOfKills = nbKills
@@ -75,7 +81,7 @@ class Display(object):
         else:
             self.CreateLevelWithConfiguration(lvlConf = gameConf.levelListConf[gameConf.currentLevel])
             self.levelName = gameConf.levelListConf[gameConf.currentLevel].levelName
-        self.startTime = int(round(self.t.time() * 1000))
+        self.startTime = startTime
         self.update()
         self.root.mainloop()
         
@@ -188,7 +194,7 @@ class Display(object):
             self.EnemyUpdatingTime = 0
             self.currEnemy += 1
         if(len(self.enemyList) == 0):
-            self.endGame()
+            self.endGame(True, False)
         self.EnemyUpdatingTime += 1
         self.root.update_idletasks()
         return
@@ -209,8 +215,8 @@ class Display(object):
                         bulletFlag = 1
                     enemyID += 1
             else:
-                if((len(self.enemyList) == 0) or (self.bulletList[bulletID].x0 < self.player.x1 and self.bulletList[bulletID].x1 > self.player.x0 and self.bulletList[bulletID].y0 < self.player.y1 and self.bulletList[bulletID].y1 > self.player.y0)):
-                    self.endGame()
+                if((self.bulletList[bulletID].x0 < self.player.x1 and self.bulletList[bulletID].x1 > self.player.x0 and self.bulletList[bulletID].y0 < self.player.y1 and self.bulletList[bulletID].y1 > self.player.y0)):
+                    self.endGame(False, True)
             bulletID += 1
         
         return
@@ -236,7 +242,7 @@ class Display(object):
 #TODO: create the pause menu
         a=1       
         
-    def endGame(self):
+    def endGame(self, jumpToNextLevel = False, dead = True):
         if(self.shots == 0):accuracy = 0
         else:accuracy = 1.0*self.goodShots / self.shots
         self.endTime = int(round(self.t.time() * 1000))
@@ -245,12 +251,14 @@ class Display(object):
         score = int(max(self.player.score + self.numberOfKills*accuracy - 1*time, 0))
         self.c.delete("all")
         self.c.destroy()
-        c = Canvas(self.root, width=800, height=600, bg="black")
-        if(self.gameConf != "null" and self.gameConf.currentLevel != (len(self.gameConf.levelListConf) - 1)):
+        
+        if(self.gameConf != "null" and self.gameConf.currentLevel != (len(self.gameConf.levelListConf) - 1) and jumpToNextLevel == True):
+            c = Canvas(self.root, width=1200, height=700, bg="black")
             self.gameConf.currentLevel += 1
-            display = Display(width=1200, height=700, tkinterRoot=self.root, gameConf = self.gameConf, startTime = self.startTime, precBulleTouched = self.goodShots, precBulletTotal = self.shots, nbKills = self.numberOfKills)
+            display = Display(width=1200, height=700, tkinterRoot=self.root, gameConf = self.gameConf, startTime = self.startTime, precBulleTouched = self.goodShots, precBulletTotal = self.shots, nbKills = self.numberOfKills, score = self.player.score)
         else:
-            deathMenu = gui_endMenuLost(width = 800, height = 600, canvas = c, root = self.root, kills = self.numberOfKills, shots = self.shots, goodshots = self.goodShots, timer = time, score = score)
+            c = Canvas(self.root, width=1200, height=700, bg='#565656')
+            deathMenu = gui_endMenuLost(width = 1200, height = 700, canvas = c, root = self.root, kills = self.numberOfKills, shots = self.shots, goodshots = self.goodShots, timer = time, score = score, isDead = dead)
     
     def KeyBinding(self):
         self.c.bind("<Button-1>", self.player.shootBullet)
