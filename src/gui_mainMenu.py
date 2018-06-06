@@ -68,13 +68,13 @@ class gui_mainMenu(object):
         self.c.destroy()
         gameParse = GameParser("resources/levels/game1.game")
         gameParse.parseFile()
-        zbrah = 1
-        if zbrah == 1 :
+        NaN = 1
+        if NaN == 1 :
             print("Launching level " + gameParse.levelListConf[gameParse.currentLevel].levelName)
             display = Display(width=1200, height=700, tkinterRoot=self.root, gameConf = gameParse, startTime = int(round(self.t.time() * 1000)))
         else :
             print("Launching basic level")
-            display = Display(width=800, height=600, tkinterRoot=self.root, startTime = int(round(self.t.time() * 1000)))
+            display = Display(width=1200, height=700, tkinterRoot=self.root,gameConf = "null", startTime = int(round(self.t.time() * 1000)))
         
     def switchDown(self, event):
         if (self.currButton.next == 'null'):

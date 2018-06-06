@@ -4,7 +4,11 @@
 #
 
 import sys
-# sys.dont_write_bytecode = True
+#Create the directories that the game requires
+import os
+import shutil
+if not os.path.exists("resources/img/imgResized/"):
+    os.makedirs("resources/img/imgResized/")
 
 try:
     # for Python2
@@ -15,7 +19,6 @@ except ImportError:
 
 from LevelParser import *
 from gui_mainMenu import gui_mainMenu
-from gui_endMenuLost import gui_endMenuLost
 
 root = Tk()
 
@@ -24,3 +27,6 @@ root.resizable(False, False)
 c = Canvas(root, width=1200, height=700, bg='#565656')
 
 mainMenu = gui_mainMenu(width = 1200, height = 700, canvas = c, root = root)
+
+print("Removing useless directories...")
+shutil.rmtree("resources/img/imgResized/")
